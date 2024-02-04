@@ -27,7 +27,7 @@ struct node *insertNode(struct node *root, int value)
     {
         int c;
         printf("pointer at %d", root->data);
-        printf("\n1. Left\n2. Right");
+        printf("\n1. Left\n2. Right\n");
         scanf("%d", &c);
 
         if (c == 1)
@@ -86,31 +86,66 @@ void displayLevelWise(struct node *root)
 
 void order(struct node *root, int check)
 {
-    // if (root->left != NULL)
-    // {
-    //     if (root->right != NULL)
-    //     {
-    //         printf("The order is 2");
-    //         return;
-    //     }
-    //     printf("The order is 1");
-    //     return;
-    // }
-    // printf("The order is 0");
-    // return;
-    if(root->data == check){
+    if (root == NULL)
+    {
         return;
     }
-    root->left = order(root, check);
-    root->right = order(root, check);
+    if (root->data == check)
+    {
+        if (root->left != NULL)
+        {
+            if (root->right != NULL)
+            {
+                printf("The order is 2");
+                return;
+            }
+            printf("The order is 1");
+            return;
+        }
+        if (root->right != NULL)
+        {
+            printf("The order is 1");
+            return;
+        }
+        printf("The order is 0");
+        return;
+    }
+    order(root->left, check);
+    order(root->right, check);
+}
+
+int countLeafNodes(struct node *root)
+{
+    if (root->left == NULL)
+    {
+        if (root->right == NULL)
+        {
+            return 1;
+        }
+    }
+    return countLeafNodes(root->left) + countLeafNodes(root->right);
+}
+
+int countTotalNodes(struct node *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    return (countTotalNodes(root->left) + countTotalNodes(root->right) + 1);
+}
+
+int countInternalNodes(struct node *root)
+{
+    return countTotalNodes(root) - countLeafNodes(root) - 1;
 }
 
 void main()
 {
     struct node *root = NULL;
     int ch, val1, height, check;
-    printf("\n1. Insert\n2. Display\n3. Height\n4. Order\n5. Exit");
-    while (ch != 5)
+    printf("\n1. Insert\n2. Display\n3. Height\n4. Order\n5. Count all leaf nodes\n6. Count total nodes\n7. Count all internal nodes\n8. Exit\n");
+    while (ch != 8)
     {
         printf("\nEnter your choice : ");
         scanf("%d", &ch);
@@ -132,10 +167,18 @@ void main()
             break;
         case 4:
             printf("\nEnter the node to check order : ");
-            scanf("%d",&check);
-            order(root);
+            scanf("%d", &check);
+            order(root, check);
             break;
         case 5:
+            printf("\nThe number of leaf nodes is %d\n", countLeafNodes(root));
+            break;
+        case 6:
+            printf("\nThe number of total nodes is %d\n", countTotalNodes(root));
+            break;
+        case 7:
+            printf("The number of internal nodes is %d\n", countInternalNodes(root));
+        case 8:
             printf("Exiting");
             break;
         default:
