@@ -171,14 +171,34 @@ void siblings(struct node *root, int value)
     siblings(root->right, value);
 }
 
+int totalSiblings(struct node *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    if (root->left != NULL)
+    {
+        if (root->right != NULL)
+        {
+            return 1 + totalSiblings(root->left) + totalSiblings(root->right);
+        }
+        return totalSiblings(root->left) + totalSiblings(root->right);
+    }
+    if (root->right != NULL)
+    {
+        return totalSiblings(root->left) + totalSiblings(root->right);
+    }
+}
+
 void main()
 {
     struct node *root = NULL;
     int ch, val1, height, check, level, val;
 
-    printf("\n1. Insert\n2. Display\n3. Height\n4. Order\n5. Count all leaf nodes\n6. Count total nodes\n7. Count all internal nodes\n8. Count number of siblings\n9. Exit\n");
+    printf("\n1. Insert\n2. Display\n3. Height\n4. Order\n5. Count all leaf nodes\n6. Count total nodes\n7. Count all internal nodes\n8. Check if a node has a sibling\n9. Count total siblings\n10. Exit\n");
 
-    while (ch != 9)
+    while (ch != 10)
     {
         printf("\nEnter your choice : ");
         scanf("%d", &ch);
@@ -229,6 +249,9 @@ void main()
             }
             break;
         case 9:
+            printf("This tree has a total of %d siblings", totalSiblings(root));
+            break;
+        case 10:
             printf("Exiting");
             break;
         default:
